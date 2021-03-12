@@ -1,3 +1,5 @@
+const tokenizing = require('../functions/tokenization.js');
+const esMethods = require('../functions/elasticSearchFunctions.js');
 /*
 * Create controllers to send message for localhost:4200
 */
