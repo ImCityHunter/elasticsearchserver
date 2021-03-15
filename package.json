@@ -12,8 +12,10 @@
     "elasticsearch": "^16.7.2",
     "express": "^4.17.1",
     "get-json": "^1.0.1",
+    "lemmatizer": "^0.0.1",
+    "spellchecker": "^3.7.1",
     "stemmer": "^1.0.5",
     "stopword": "^1.0.7",
-    "xmldom": "^0.4.0"
+    "xmldom": "^0.5.0"
   }
 }

@@ -2,7 +2,14 @@ const readQueryXML  = require('./ReadQueryXML');
 const esMethods = require('./elasticSearchFunctions');
 
 async function getTopK(text, k){
-  const tmp =  await esMethods.search("cfc",text,k)
+  //console.log(text);
+  let tmp = [];
+
+  try{
+    tmp =  await esMethods.search("cfc",text,k)
+  }catch(error){
+    console.log(error);
+  }
   return tmp.slice(0,parseInt(k));
 }
 
@@ -58,9 +65,15 @@ async function getMAP10(){
 
 //https://queirozf.com/entries/evaluation-metrics-for-ranking-problems-introduction-and-examples#average-precision-k
 async function test(){
-  const allQueries = await readQueryXML.readQueryXML();
-  const length = Object.keys(allQueries).length;
-
+  let allQueries = {};
+  try {
+    allQueries = await readQueryXML.readQueryXML();
+    console.log('size of arr is:',Object.keys(allQueries).length);
+  } catch (error) {
+    console.log('error appears in getting all queries');
+    console.log(error);
+  }
+  const length = (Object.keys(allQueries)==undefined) ? 0:Object.keys(allQueries).length;
   const apk = {};
 
   let MAPK = 0.0;

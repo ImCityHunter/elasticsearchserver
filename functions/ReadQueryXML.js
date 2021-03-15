@@ -20,7 +20,15 @@ async function readQueryXML(){
   // get every Query tag
   const QUERIES = doc.getElementsByTagName('QUERY');
 
-  const result = await readQuery(QUERIES);
+  let result = {};
+
+  try {
+    // console.log('there are many Queries', Object.keys(QUERIES).length);
+    result = await readQuery(QUERIES);
+  } catch (error) {
+    console.log(error);
+  }
+
   return result;
 }
 
@@ -39,7 +47,8 @@ const allQueries = {};
 /*
 * Parse and Extract meaningful information
 */
-function readQuery(QUERIES){
+async function readQuery(QUERIES){
+  console.log('start to read all Queries in function');
   for(let index =  0; index < QUERIES.length; index++){
     const expected = [];
 
@@ -51,19 +60,18 @@ function readQuery(QUERIES){
     // get queryText
     const QueryText = QUERIES[index].getElementsByTagName('QueryText')[0];
     const rawText = (QueryText == undefined) ? "": QueryText.childNodes[0].data;
-    const newText = tokenizing(rawText);
 
     // get all items in each query
-    const items = QUERIES[index].getElementsByTagName('Item');
-
+    const items = await QUERIES[index].getElementsByTagName('Item');
     // store each item in the an arr, which will be stored later
     for (let i = 0; i < items.length;i++){
       let item = parseInt(items[i].textContent);
       expected.push(item);
     }
+
     allQueries[query_id] = new Object();
     allQueries[query_id].id = query_id;
-    allQueries[query_id].text = newText;
+    allQueries[query_id].text = rawText;
     allQueries[query_id].expected = expected;
   }
   return allQueries;

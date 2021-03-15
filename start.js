@@ -10,28 +10,50 @@ async function start(){
 
   // build an index named 'cfc' in elastic search
   esMethods.createIndex("cfc");
+  console.log('created Index');
 
   // read all cfc collections
-  await xmlMethods.readAllXML();
+  try{
+    await xmlMethods.readAllXML();
+  } catch(error){
+    console.log(error);
+  }
+  console.log("all xml doc has been processed");
 
   // update elastic search
-  await updateIndex();
+  console.log("updating index");
+  try{
+    await await updateIndex();
+  } catch(error){
+    console.log(error);
+  }
+  console.log('updated Index');
 
   // check how many docs were inserted to elastic search
   esMethods.countIndex("cfc","record");
+  console.log('done putting in elastic search');
 
   // run test with query samples
-  // queryResult.test();
-  queryResult.test02();
+  queryResult.test();
+  //queryResult.test02();
 }
 
-function updateIndex(){
+async function updateIndex(){
   const allDocs = xmlMethods.allDocs;
+  let count = 0;
+  let max = Object.keys(allDocs).length;
+  console.log("there are",max,"terms in the collections");
   for(let i in allDocs){
     let doc = allDocs[i];
     let record_id = doc.id;
     let text = doc.text;
-    esMethods.createId("cfc", record_id, "record", text);
+    try{
+      await esMethods.createId("cfc", record_id, "record", text);
+      console.log(count++,' terms have updated');
+    } catch(error){
+      console.log(error);
+    }
+
   }
 }
 
